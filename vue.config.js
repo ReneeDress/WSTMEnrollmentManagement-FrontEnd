@@ -15,7 +15,7 @@ module.exports = {
     // type: string  
     // default: "dist"
     // 打包后的文件夹名字
-    outputDir: 'school',
+    outputDir: 'WSTMEnrollmentManagement',
 
     // type: string  
     // default: ""

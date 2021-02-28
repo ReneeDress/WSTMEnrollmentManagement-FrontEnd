@@ -177,7 +177,7 @@
         that.fullscreenLoading = true;
         axios({
           method: 'post',
-          url: 'http://localhost:5000/login',
+          url: 'https://api.yijunstudio.xyz/school/login',
           data: that.loginform,
         }).then((response) => {
           console.log(response)

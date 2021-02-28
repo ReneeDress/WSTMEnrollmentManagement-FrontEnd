@@ -42,7 +42,7 @@ const router = new VueRouter({
 // ES6简写，等于routes：routes
     mode: 'history',
     routes,
-    base: '/School/',
+    base: '/WSTMEnrollmentManagement/',
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition

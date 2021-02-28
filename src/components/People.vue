@@ -385,7 +385,7 @@
         methods: {
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/alldept';
+                const path = 'https://api.yijunstudio.xyz/school/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -403,7 +403,7 @@
             },
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/student';
+                const path = 'https://api.yijunstudio.xyz/school/student';
                 axios.get(path)
                     .then((res) => {
                         that.studentData = res.data;
@@ -421,7 +421,7 @@
             },
             getTEACHERMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/teacher';
+                const path = 'https://api.yijunstudio.xyz/school/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.teacherData = res.data;
@@ -554,7 +554,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/addNew/' + type,
+                        url: 'https://api.yijunstudio.xyz/school/addNew/' + type,
                         data: item,
                     }).then((response) => {
                         console.log(response)
@@ -636,7 +636,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/delItem/' + type,
+                        url: 'https://api.yijunstudio.xyz/school/delItem/' + type,
                         data: row,
                     }).then((response) => {
                         console.log(response)

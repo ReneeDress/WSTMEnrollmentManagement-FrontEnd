@@ -1,5 +1,7 @@
 <template>
-    
+    <div id="gpachart">
+
+    </div>
 </template>
 
 <script>

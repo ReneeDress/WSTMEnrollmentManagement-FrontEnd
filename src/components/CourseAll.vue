@@ -149,7 +149,7 @@
         methods: {
             getAVATERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/avaterm/5';
+                const path = 'https://api.yijunstudio.xyz/school/avaterm/5';
                 axios.get(path)
                     .then((res) => {
                         that.avaTerm = res.data;
@@ -164,7 +164,7 @@
             },
             getALLTERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/allterm';
+                const path = 'https://api.yijunstudio.xyz/school/allterm';
                 axios.get(path)
                     .then((res) => {
                         that.allTerm = res.data;
@@ -179,7 +179,7 @@
             },
             getALLTEACHERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/teacher';
+                const path = 'https://api.yijunstudio.xyz/school/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.allTeacher = res.data;
@@ -194,7 +194,7 @@
             },
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/alldept';
+                const path = 'https://api.yijunstudio.xyz/school/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -209,7 +209,7 @@
             },
             getCOURSEALLMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/courseall';
+                const path = 'https://api.yijunstudio.xyz/school/courseall';
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;

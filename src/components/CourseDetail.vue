@@ -137,7 +137,7 @@
         methods: {
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/student';
+                const path = 'https://api.yijunstudio.xyz/school/student';
                 axios.get(path)
                     .then((res) => {
                         that.allStu = res.data;
@@ -152,7 +152,7 @@
             },
             getCOURSEINFOMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'https://api.yijunstudio.xyz/school/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseInfo = res.data[0];
@@ -174,7 +174,7 @@
             },
             getCOURSEDEATILMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/coursedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'https://api.yijunstudio.xyz/school/coursedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -230,7 +230,7 @@
                 that.loadingC = true;
                 axios({
                     method: 'post',
-                    url: 'http://localhost:5000/delelection',
+                    url: 'https://api.yijunstudio.xyz/school/delelection',
                     data: delE,
                 }).then((response) => {
                     console.log(response)
@@ -286,7 +286,7 @@
                     }
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/newelection',
+                        url: 'https://api.yijunstudio.xyz/school/newelection',
                         data: NewStu,
                     }).then((response) => {
                         console.log(response)

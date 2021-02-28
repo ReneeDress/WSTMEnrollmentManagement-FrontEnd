@@ -173,7 +173,7 @@
         methods: {
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/student';
+                const path = 'https://api.yijunstudio.xyz/school/student';
                 axios.get(path)
                     .then((res) => {
                         that.allStu = res.data;
@@ -188,7 +188,7 @@
             },
             getCOURSEINFOMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'https://api.yijunstudio.xyz/school/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseInfo = res.data[0];
@@ -211,7 +211,7 @@
             getGRADEDEATILMessage() {
                 let that = this;
                 that.loadingC = true;
-                const path = 'http://localhost:5000/gradedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'https://api.yijunstudio.xyz/school/gradedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -285,7 +285,7 @@
                 that.fullscreenLoading = true;
                 axios({
                     method: 'post',
-                    url: 'http://localhost:5000/newelection',
+                    url: 'https://api.yijunstudio.xyz/school/newelection',
                     data: NewStu,
                 }).then((response) => {
                     console.log(response)
@@ -339,7 +339,7 @@
                     that.loadingC = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/gradeUpdate',
+                        url: 'https://api.yijunstudio.xyz/school/gradeUpdate',
                         data: gradeData,
                     }).then((response) => {
                         console.log(response)
