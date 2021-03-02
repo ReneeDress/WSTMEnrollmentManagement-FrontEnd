@@ -38,7 +38,7 @@
                             v-loading="loadingC"
                             ref="filterTableC"
                             :data="courseData.slice((currentPageC - 1) * pageSizeC, currentPageC * pageSizeC)"
-                            style="width: 100%"
+                            style="width: 100%;"
                             show-summary
                             :summary-method="blankBottom">
                         <el-table-column
@@ -92,7 +92,13 @@
             </el-col>
             <el-col :span="12">
                 <el-card shadow="always" style="width: 97%;">
-
+                    <GPAChart :userid="userid"></GPAChart>
+                </el-card>
+                <el-card shadow="always" style="width: 97%; margin-top: 3vh;">
+                    <PJCJChart :userid="userid"></PJCJChart>
+                </el-card>
+                <el-card shadow="always" style="width: 97%; margin-top: 3vh;">
+                    <XFChart :userid="userid"></XFChart>
                 </el-card>
             </el-col>
         </el-row>
@@ -101,9 +107,17 @@
 
 <script>
     import axios from "axios";
+    import GPAChart from "@/components/GPAChart";
+    import PJCJChart from "@/components/PJCJChart";
+    import XFChart from "@/components/XFChart";
 
     export default {
         name: "GradeAll",
+        components: {
+            PJCJChart,
+            GPAChart,
+            XFChart
+        },
         props: {
             userid: String,
             usertype: Boolean,
@@ -133,7 +147,7 @@
         methods: {
             getMYMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/student/' + that.userid;
+                const path = 'http://localhost:5000/student/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.myinfo = res.data[0];
@@ -148,7 +162,7 @@
             },
             getGRADEALLMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/gradeAll/' + that.userid;
+                const path = 'http://localhost:5000/gradeAll/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -169,7 +183,7 @@
             },
             getGRADEALLGPAMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/gradeAll/GPA/' + that.userid;
+                const path = 'http://localhost:5000/gradeAll/GPA/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.gpaData = res.data;
@@ -212,11 +226,14 @@
                 let hjcj = 0.000;
                 let hjjd = 0.000;
                 let index = ['xq', 'zxf', 'pjcj', 'pjjd'];
+                // console.log(gpa)
                 gpa.forEach((item) => {
-                    console.log(item);
-                    hjxf += item[index[1]];
-                    hjcj += item[index[2]];
-                    hjjd += item[index[1]] * item[index[3]];
+                    // console.log(item);
+                    if (item[index[1]] != null && item[index[2]] != null && item[index[3]] != null)
+                        hjxf += item[index[1]];
+                        hjcj += item[index[2]];
+                        hjjd += item[index[1]] * item[index[3]];
+                    // console.log(hjxf, hjcj, hjjd)
                 });
                 this.allCredit = hjxf;
                 this.avgGrade = (hjcj/(this.courseData).filter(this.hasGrade).length).toFixed(3);

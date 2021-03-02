@@ -5,6 +5,11 @@
                 <el-col :span="2">
                     <el-button size="mini" plain @click="toGradeEdit">返回成绩录入</el-button>
                 </el-col>
+                <el-col :span="20"></el-col>
+                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
+                    <el-button v-if="!editgrade" size="mini" @click="changeEditGrade" type="primary">录入成绩</el-button>
+                    <el-button v-else size="mini" @click="submitGrade" type="success">提交成绩</el-button>
+                </el-col>
             </el-row>
             <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">
                 <el-col :span="2" style="text-indent: 10px; font-weight: 500;">课程信息</el-col>
@@ -17,8 +22,10 @@
                     <span style="color: red;">*成绩可为空，请输入整数。</span>
                 </el-col>
                 <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
-                    <el-button v-if="!editgrade" size="mini" @click="changeEditGrade" type="primary">录入成绩</el-button>
-                    <el-button v-else size="mini" @click="submitGrade" type="success">提交成绩</el-button>
+                    <el-button size="mini" @click="gradeAnalysis = true" :disabled="loadingC">成绩分析</el-button>
+                    <el-dialog title="成绩分布图" :visible.sync="gradeAnalysis"  width="80%">
+                        <GradeAnalysis :courseData="courseData"></GradeAnalysis>
+                    </el-dialog>
                 </el-col>
             </el-row>
             <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">
@@ -30,9 +37,9 @@
                 <el-col :span="4">{{ (courseInfo.xq).slice(0,4) }}学年{{ (courseInfo.xq).slice(-2,) == '01'? '秋季' : (courseInfo.xq).slice(-2,) == '02'? '冬季' : (courseInfo.xq).slice(-2,) == '03'? '春季' : '夏季' }}学期</el-col>
                 <el-col :span="2" style="text-indent: 10px; font-weight: 500; color: dodgerblue;">平时成绩占比</el-col>
                 <el-col :span="2">
-                    <span v-if="!edit" style="text-indent: 10px; color: dodgerblue;">{{ percent }}%</span>
+                    <span v-if="!edit" style="text-indent: 10px; color: dodgerblue;"> {{ percent }}%</span>
                     <div v-else  style="color: dodgerblue;">
-                        <el-input-number :min="10" :max="90" v-model="percent" size="mini" placeholder="请输入整数" style="width: 80%;"> %</el-input-number>
+                        <el-input-number :min="10" :max="90" v-model="percent" size="mini" controls-position="right" placeholder="请输入整数" style="width: 82%;"> %</el-input-number>
                         <span> %</span>
                     </div>
                 </el-col>
@@ -77,7 +84,7 @@
                         width="120">
                     <template slot-scope="scope">
                         <el-input v-if="editgrade" size="mini" v-model="scope.row.pscj"></el-input>
-                        <span v-else>{{ scope.row.pscj }}</span>
+                        <span v-else>{{ scope.row.pscj == null? '-' :scope.row.pscj }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -86,18 +93,24 @@
                         width="120">
                     <template slot-scope="scope">
                         <el-input v-if="editgrade" size="mini" v-model="scope.row.kscj"></el-input>
-                        <span v-else>{{ scope.row.kscj }}</span>
+                        <span v-else>{{ scope.row.kscj == null? '-' :scope.row.kscj }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                         prop="zpcj"
                         label="总评成绩"
                         width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.zpcj == null? '-' : scope.row.zpcj.toFixed(2) }}
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="jd"
                         label="绩点"
                         width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.jd == null? '-' : scope.row.jd.toFixed(1) }}
+                    </template>
                 </el-table-column>
 <!--                <el-table-column-->
 <!--                        fixed="right"-->
@@ -133,8 +146,12 @@
 
 <script>
     import axios from 'axios';
+    import GradeAnalysis from "@/components/GradeAnalysis";
     export default {
         name: "GradeDetail",
+        components: {
+            GradeAnalysis
+        },
         props: {
             userid: String,
             usertype: Boolean,
@@ -144,6 +161,7 @@
         },
         data() {
             return {
+                gradeAnalysis: false,
                 courseData: [],
                 totalC: 0,
                 loadingC: true,
@@ -173,7 +191,7 @@
         methods: {
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/student';
+                const path = 'http://localhost:5000/student';
                 axios.get(path)
                     .then((res) => {
                         that.allStu = res.data;
@@ -188,7 +206,7 @@
             },
             getCOURSEINFOMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'http://localhost:5000/courseopen/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseInfo = res.data[0];
@@ -211,7 +229,7 @@
             getGRADEDEATILMessage() {
                 let that = this;
                 that.loadingC = true;
-                const path = 'https://api.yijunstudio.xyz/school/gradedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
+                const path = 'http://localhost:5000/gradedetail/' + that.xq + '/' + that.kh + '/' + that.gh;
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -285,7 +303,7 @@
                 that.fullscreenLoading = true;
                 axios({
                     method: 'post',
-                    url: 'https://api.yijunstudio.xyz/school/newelection',
+                    url: 'http://localhost:5000/newelection',
                     data: NewStu,
                 }).then((response) => {
                     console.log(response)
@@ -339,7 +357,7 @@
                     that.loadingC = true;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/gradeUpdate',
+                        url: 'http://localhost:5000/gradeUpdate',
                         data: gradeData,
                     }).then((response) => {
                         console.log(response)

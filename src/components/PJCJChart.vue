@@ -1,5 +1,5 @@
 <template>
-    <div id="gpachart" style="width: 100%; height: 200px; color: #707070;">
+    <div id="pjcjchart" style="width: 100%; height: 200px; color: #707070;">
     </div>
 </template>
 
@@ -8,7 +8,7 @@
     // import echarts from "echarts";
 
     export default {
-        name: "GPAChart",
+        name: "PJCJChart",
         props: {
             userid: String,
         },
@@ -93,7 +93,7 @@
             },
             myEcharts(gpaD){
                 // 基于准备好的dom，初始化echarts实例
-                var myChart = this.echarts.init(document.getElementById('gpachart'));
+                var myChart = this.echarts.init(document.getElementById('pjcjchart'));
                 // var gpaD = data;
                 var xqs = [];
                 var cjs = [];
@@ -108,14 +108,14 @@
                 // 指定图表的配置项和数据
                 var option = {
                     title: {
-                        text: '平均绩点变化趋势',
+                        text: '平均成绩变化趋势',
                         textStyle: {
                             color: '#707070'
                         }
                     },
                     tooltip: {},
                     legend: {
-                        data: ['平均绩点']
+                        data: ['平均成绩']
                     },
                     xAxis: {
                         data: xqs,
@@ -137,9 +137,9 @@
                     },
                     series: [
                         {
-                            name: '平均绩点',
+                            name: '平均成绩',
                             type: 'line',
-                            data: jds,
+                            data: cjs,
                             color: '#409EFF'
                         }]
                 };

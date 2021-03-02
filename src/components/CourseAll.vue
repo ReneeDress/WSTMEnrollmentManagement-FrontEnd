@@ -1,21 +1,47 @@
 <template>
     <div id="courseall" style="width: 100%;">
         <el-card shadow="always" style="width: 97%;">
-            <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left; height: 3.1vh;">
-                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
-                    只看未开
+            <el-row v-if="usertype" type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left; height: 3.1vh;">
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;">课号</el-col>
+                <el-col :span="4">
+                    <el-autocomplete v-model="New.khNew" clearable placeholder="请输入课程编号" :fetch-suggestions="querySearch" size="mini">
+                        <template slot-scope="{ item }">
+                            <span>{{ item.kh }}</span>
+                            <span style="font-size: 10px;"> 已存在</span>
+                        </template>
+                    </el-autocomplete>
                 </el-col>
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;">课名</el-col>
+                <el-col :span="4">
+                    <el-input placeholder="请输入课程名称" v-model="New.kmNew" size="mini" clearable/>
+                </el-col>
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;">学院</el-col>
+                <el-col :span="4">
+                    <el-select v-model="New.yxhNew" clearable placeholder="请选择开课学院" filterable size="mini">
+                        <el-option
+                                v-for="item in allDept"
+                                :key="item.yxh"
+                                :label="item.yxh + ' ' + item.mc"
+                                :value="item.yxh">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;">学分</el-col>
                 <el-col :span="2">
-                    <el-switch v-model="zero" />
+                    <el-input-number :min="0" :step="1" placeholder="默认为4" v-model="New.xfNew" size="mini" style="width: 100%;" clearable/>
                 </el-col>
-                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
-                    只看已开
-                </el-col>
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;"></el-col>
+                <el-col :span="1" style="text-indent: 10px; font-weight: 500;">学时</el-col>
                 <el-col :span="2">
-                    <el-switch v-model="notzero" />
+                    <el-input-number :min="0" :step="10" placeholder="默认为40" v-model="New.xsNew" size="mini" style="width: 100%;" clearable/>
+                </el-col>
+                <el-col :span="3" align="right">
+                    <el-button-group>
+                        <el-button size="mini" type="primary" @click="courseNew(New)" v-loading.fullscreen.lock="fullscreenLoading">新增课程</el-button>
+                    </el-button-group>
                 </el-col>
             </el-row>
-            <el-divider></el-divider>
+            <el-divider v-if="usertype"></el-divider>
             <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">
                 <el-col :span="2" style="text-indent: 10px; font-weight: 500;">开课学院</el-col>
                 <el-col :span="10">
@@ -28,7 +54,18 @@
                         </el-option>
                     </el-select>
                 </el-col>
-                <el-col :span="2" style="text-indent: 10px; font-weight: 500;"></el-col>
+                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
+                    只看未开
+                </el-col>
+                <el-col :span="2">
+                    <el-switch v-model="zero" />
+                </el-col>
+                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
+                    只看已开
+                </el-col>
+                <el-col :span="2">
+                    <el-switch v-model="notzero" />
+                </el-col>
             </el-row>
             <el-row type="flex" align="middle">
                 <el-col :span="1"><i class="el-icon-search"></i></el-col>
@@ -133,10 +170,11 @@
                 avaTerm: [],
 
                 New: {
-                    xqNew: '',
                     khNew: '',
-                    ghNew: '',
-                    sksjNew: '',
+                    kmNew: '',
+                    yxhNew: '',
+                    xfNew: 4,
+                    xsNew: 40,
                 },
 
                 onlyme: false,
@@ -147,9 +185,20 @@
             }
         },
         methods: {
+            querySearch(queryString, cb) {
+                var courseData = this.courseData;
+                var results = queryString ? courseData.filter(this.createFilter(queryString)) : courseData;
+                // 调用 callback 返回建议列表的数据
+                cb(results);
+            },
+            createFilter(queryString) {
+                return (course) => {
+                    return (course.kh.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
             getAVATERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/avaterm/5';
+                const path = 'http://localhost:5000/avaterm/5';
                 axios.get(path)
                     .then((res) => {
                         that.avaTerm = res.data;
@@ -164,7 +213,7 @@
             },
             getALLTERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/allterm';
+                const path = 'http://localhost:5000/allterm';
                 axios.get(path)
                     .then((res) => {
                         that.allTerm = res.data;
@@ -179,7 +228,7 @@
             },
             getALLTEACHERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/teacher';
+                const path = 'http://localhost:5000/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.allTeacher = res.data;
@@ -194,7 +243,7 @@
             },
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/alldept';
+                const path = 'http://localhost:5000/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -209,7 +258,7 @@
             },
             getCOURSEALLMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/courseall';
+                const path = 'http://localhost:5000/courseall';
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -271,6 +320,86 @@
             handleCurrentChangeC(currentPage) {
                 this.currentPageC = currentPage
             },
+            courseNew(New) {
+                let that = this;
+                if (New.khNew == '' || New.kmNew == '' || New.yxhNew == '' || New.xfNew == '' || New.xsNew == '') {
+                    that.$message({
+                        message: '新增课程信息不得为空',
+                        type: 'error'
+                    });
+                } else {
+                    // console.log(New);
+                    that.fullscreenLoading = true;
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:5000/courseall/new',
+                        data: New,
+                    }).then((response) => {
+                        console.log(response)
+                        if (response.data == 'success') {
+                            that.$message({
+                                message: '新增成功',
+                                type: 'success'
+                            });
+                            that.fullscreenLoading = false;
+                            that.getCOURSEALLMessage();
+                        } else if (response.data == 'repeat') {
+                            that.$message({
+                                message: '课程编号已存在 新增失败',
+                                type: 'error'
+                            });
+                            that.fullscreenLoading = false;
+                        } else {
+                            that.fullscreenLoading = false;
+                            that.$message({
+                                message: '未知错误',
+                                type: 'error'
+                            });
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                }
+            },
+            handleDeleteC(row) {
+                let that = this;
+                that.fullscreenLoading = true;
+                if (row.kkcs != 0)
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:5000/courseall/del',
+                        data: row,
+                    }).then((response) => {
+                        console.log(response)
+                        if (response.data == 'success') {
+                            that.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            that.fullscreenLoading = false;
+                            that.getCOURSEALLMessage();
+                        } else if (response.data == 'repeat') {
+                            that.$message({
+                                message: '该课程不存在 无法删除',
+                                type: 'error'
+                            });
+                            that.fullscreenLoading = false;
+                        } else {
+                            that.fullscreenLoading = false;
+                            that.$message({
+                                message: '未知错误',
+                                type: 'error'
+                            });
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                else
+                    that.$message({
+                        message: '已有开课记录 无法删除',
+                        type: 'error'
+                    });
+            }
         },
         mounted() {
             // console.log(this.userid, this.usertype);

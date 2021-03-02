@@ -8,7 +8,7 @@
                 class="el-menu-vertical-demo"
                 style="height: 10vh; width: 90%;"/>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="15">
         <el-row v-if="$route.path == '/' || userinfo.id == ''" style="font-size: 28px; font-weight: 500; letter-spacing: 2px;" type="flex" align="middle" justify="start">
           明星大侦探学生选课成绩管理系统
         </el-row>
@@ -48,17 +48,50 @@
           <el-breadcrumb-item v-if="$route.path.includes('/CourseDetail') || $route.path.includes('/GradeDetail')"></el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col v-if="userinfo.id != ''" :span="3" type="flex" align="middle" justify="end">
-        <span style="font-size: 12px; font-weight: 200; margin-right: 20px;">你好，{{ userinfo.id }}</span>
-        <el-button size="mini" @click="logout">
-          登出
-        </el-button>
+      <el-col v-if="userinfo.id != ''" :span="6" type="flex" align="middle" justify="end">
+        <el-row>
+          <el-col :span="12" align="right">
+            <span style="font-size: 12px; font-weight: 200; margin-right: 20px;">你好，{{ userinfo.id }}</span>
+          </el-col>
+          <el-col :span="6">
+            <el-button size="mini" @click="modify = true">
+              修改密码
+            </el-button>
+            <el-dialog title="修改密码" :visible.sync="modify">
+              <el-row>
+                <el-input v-model="oldPwd" show-password style="width: 70%; margin: 10px;" placeholder="请输入旧密码"></el-input>
+              </el-row>
+              <el-row>
+                <el-input v-model="newPwd" show-password style="width: 70%; margin: 10px;" placeholder="请输入新密码"></el-input>
+              </el-row>
+              <el-row>
+                <el-button @click="modifyPwd" type="primary" style="margin: 10px;" :disabled="(newPwd == '' || oldPwd == '' || nosubmit)">修改密码</el-button>
+              </el-row>
+            </el-dialog>
+          </el-col>
+          <el-col :span="6">
+            <el-button size="mini" @click="logout">
+              登出
+            </el-button>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col v-else :span="3" type="flex" align="middle" justify="end">
-        <span style="font-size: 12px; font-weight: 200; margin-right: 20px;">请先登录</span>
-        <el-button size="mini" @click="logout" disabled>
-          登出
-        </el-button>
+      <el-col v-else :span="6" type="flex" align="middle" justify="end">
+        <el-row>
+          <el-col :span="12" align="right">
+            <span style="font-size: 12px; font-weight: 200; margin-right: 20px; text-align: right;">请先登录</span>
+          </el-col>
+          <el-col :span="6">
+            <el-button size="mini" @click="modify = true" disabled>
+              修改密码
+            </el-button>
+          </el-col>
+          <el-col :span="6">
+            <el-button size="mini" @click="logout" disabled>
+              登出
+            </el-button>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-row type="flex" align="top">
@@ -154,6 +187,10 @@
     },
     data() {
       return {
+        oldPwd: '',
+        newPwd: '',
+        modify: false,
+        nosubmit: false,
         fullscreenLoading: false,
         userinfo: {
           id: '',
@@ -177,7 +214,7 @@
         that.fullscreenLoading = true;
         axios({
           method: 'post',
-          url: 'https://api.yijunstudio.xyz/school/login',
+          url: 'http://localhost:5000/login',
           data: that.loginform,
         }).then((response) => {
           console.log(response)
@@ -195,6 +232,48 @@
               message: '学工号或密码错误',
               type: 'error'
             });
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
+      modifyPwd() {
+        let that = this;
+        that.nomodify = true;
+        let modifyForm = {
+          id: that.userinfo.id,
+          usertype: that.userinfo.type,
+          oldpwd: that.oldPwd,
+          newpwd: that.newPwd,
+        };
+        axios({
+          method: 'post',
+          url: 'http://localhost:5000/modifypwd',
+          data: modifyForm,
+        }).then((response) => {
+          console.log(response)
+          if (response.data == 'success') {
+            that.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+            that.nomodify = false;
+            let routeUrl = this.$router.resolve({
+              path: '/',
+            });
+            window.open(routeUrl.href, '_self');
+          } else if (response.data == 'oldpwdwrong') {
+            that.$message({
+              message: '旧密码错误',
+              type: 'error'
+            });
+            that.nomodify = false;
+          } else {
+            that.$message({
+              message: '未知错误',
+              type: 'error'
+            });
+            that.nomodify = false;
           }
         }).catch((error) => {
           console.log(error)

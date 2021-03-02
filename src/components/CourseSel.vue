@@ -420,7 +420,7 @@
             },
             getALLTERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/allterm';
+                const path = 'http://localhost:5000/allterm';
                 axios.get(path)
                     .then((res) => {
                         that.allTerm = res.data;
@@ -435,7 +435,7 @@
             },
             getAVATERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/avaterm/5';
+                const path = 'http://localhost:5000/avaterm/5';
                 axios.get(path)
                     .then((res) => {
                         that.avaTerm = res.data;
@@ -475,7 +475,7 @@
             getCOURSEOPENMessage() {
                 let that = this;
                 that.loadingCO = true;
-                const path = 'https://api.yijunstudio.xyz/school/courseopen/' + that.term;
+                const path = 'http://localhost:5000/courseopen/' + that.term;
                 if (that.term != '')
                     axios.get(path)
                         .then((res) => {
@@ -520,7 +520,7 @@
             getCOURSEDETAILMessage() {
                 let that = this;
                 that.loadingC = true;
-                const path = 'https://api.yijunstudio.xyz/school/coursedetail/' + that.term + '/' + that.userid;
+                const path = 'http://localhost:5000/coursedetail/' + that.term + '/' + that.userid;
                 if (that.term != '')
                     axios.get(path)
                         .then((res) => {
@@ -545,7 +545,7 @@
                     newsel['xh'] = that.userid;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/newelection',
+                        url: 'http://localhost:5000/newelection',
                         data: newsel,
                     }).then((response) => {
                         console.log(response)
@@ -582,7 +582,7 @@
             getSCHEDULEMessage() {
                 let that = this;
                 that.loading = true;
-                const path = 'https://api.yijunstudio.xyz/school/schedule/' + that.term + '/' + that.userid;
+                const path = 'http://localhost:5000/schedule/' + that.term + '/' + that.userid;
                 if (that.term != '')
                     axios.get(path)
                         .then((res) => {
@@ -611,7 +611,7 @@
                     that.loadingC = true;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/delelection',
+                        url: 'http://localhost:5000/delelection',
                         data: delE,
                     }).then((response) => {
                         console.log(response)
@@ -658,9 +658,10 @@
             } else {
                 this.getAVATERMMessage();
                 this.getALLTERMMessage();
-                this.getCOURSEDEATILMessage();
-                this.getSCHEDULEMessage();
-                this.getCOURSEOPENMessage();
+                if (this.term != '')
+                    this.getCOURSEDEATILMessage();
+                    this.getSCHEDULEMessage();
+                    this.getCOURSEOPENMessage();
             }
         },
     }

@@ -45,7 +45,7 @@
                             <div slot="footer" class="dialog-footer">
                                 <el-button @click="dialogNewSVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="submitNew('S', newS)"
-                                           :disabled="!(newS.xh != '' && newS.xm != '' && newS.xb != '' && newS.yxh != '')">确 定</el-button>
+                                           :disabled="!(newS.xh != '' && newS.xm != '' && newS.xb != '' && newS.yxh != '') || loading">确 定</el-button>
                             </div>
                         </el-dialog>
                     </el-col>
@@ -99,7 +99,7 @@
                             <el-button
                                     :disabled="!usertype"
                                     size="mini"
-                                    @click="handleUpdate('S', scope.row)">编辑</el-button>
+                                    @click="dialogModSVisible = true; newS = scope.row;">编辑</el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
@@ -119,6 +119,41 @@
                             :total="(studentData.filter(searchS)).length">
                     </el-pagination>
                 </p>
+                <el-dialog title="修改学生信息" :visible.sync="dialogModSVisible" width="30%">
+                    <el-form :model="newS" style="display: inline-block; margin: 0 auto;">
+                        <el-form-item label="学号" :label-width="formLabelWidth" required>
+                            <el-input v-model="newS.xh" autocomplete="off" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名" :label-width="formLabelWidth" required>
+                            <el-input v-model="newS.xm" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="性别" :label-width="formLabelWidth" required>
+                            <el-radio-group v-model="newS.xb">
+                                <el-radio label="男">男</el-radio>
+                                <el-radio label="女">女</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="学院" :label-width="formLabelWidth" required>
+                            <el-select v-model="newS.yxh" style="width: 100%;">
+                                <el-option v-for="item in allDept" :key="item.yxh" :label="item.mc" :value="item.yxh"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="籍贯" :label-width="formLabelWidth">
+                            <el-input v-model="newS.jg" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="出生日期" :label-width="formLabelWidth">
+                            <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="newS.csrq" style="width: 100%;"></el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="手机号码" :label-width="formLabelWidth">
+                            <el-input v-model="newS.sjhm" autocomplete="off"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogModSVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="updateItem('S', newS)"
+                                   :disabled="!(newS.xh != '' && newS.xm != '' && newS.xb != '' && newS.yxh != '') || loading">确 定</el-button>
+                    </div>
+                </el-dialog>
             </el-tab-pane>
             <el-tab-pane label="教师信息管理" name="teacher">
                 <el-row type="flex" align="middle" style="margin-bottom: 1vh;">
@@ -158,7 +193,7 @@
                             <div slot="footer" class="dialog-footer">
                                 <el-button @click="dialogNewTVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="submitNew('T', newT)"
-                                           :disabled="!(newT.gh != '' && newT.xm != '' && newT.xb != '' && newT.yxh != '' && newT.zc != '')">确 定</el-button>
+                                           :disabled="!(newT.gh != '' && newT.xm != '' && newT.xb != '' && newT.yxh != '' && newT.zc != '') || loading">确 定</el-button>
                             </div>
                         </el-dialog>
                     </el-col>
@@ -207,7 +242,7 @@
                             <el-button
                                     :disabled="!usertype"
                                     size="mini"
-                                    @click="handleUpdate('T', scope.row)">编辑</el-button>
+                                    @click="dialogModTVisible = true; newT = scope.row;">编辑</el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
@@ -227,6 +262,38 @@
                             :total="(teacherData.filter(searchT)).length">
                     </el-pagination>
                 </p>
+                <el-dialog title="修改教师信息" :visible.sync="dialogModTVisible" width="30%">
+                    <el-form :model="newT" style="display: inline-block; margin: 0 auto;">
+                        <el-form-item label="工号" :label-width="formLabelWidth" required>
+                            <el-input v-model="newT.gh" autocomplete="off" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名" :label-width="formLabelWidth" required>
+                            <el-input v-model="newT.xm" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="性别" :label-width="formLabelWidth" required>
+                            <el-radio-group v-model="newT.xb">
+                                <el-radio label="男">男</el-radio>
+                                <el-radio label="女">女</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="学院" :label-width="formLabelWidth" required>
+                            <el-select v-model="newT.yxh" style="width: 100%;">
+                                <el-option v-for="item in allDept" :key="item.yxh" :label="item.mc" :value="item.yxh"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="职称" :label-width="formLabelWidth" required>
+                            <el-input v-model="newT.zc" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="出生日期" :label-width="formLabelWidth">
+                            <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="newT.csrq" style="width: 100%;"></el-date-picker>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogModTVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="updateItem('T', newT)"
+                                   :disabled="!(newT.gh != '' && newT.xm != '' && newT.xb != '' && newT.yxh != '' && newT.zc != '') || loading">确 定</el-button>
+                    </div>
+                </el-dialog>
             </el-tab-pane>
             <el-tab-pane label="学院信息管理" name="department">
                 <el-row type="flex" align="middle" style="margin-bottom: 1vh;">
@@ -238,7 +305,7 @@
                     <el-col :span="3">
                         <el-button type="primary" @click="addUser('D')">新增学院</el-button>
                         <el-dialog title="新增学院信息" :visible.sync="dialogNewDVisible" width="30%">
-                            <el-form :model="newT" style="display: inline-block; margin: 0 auto;">
+                            <el-form :model="newD" style="display: inline-block; margin: 0 auto;">
                                 <el-form-item label="院系号" :label-width="formLabelWidth" required>
                                     <el-input v-model="newD.yxh" autocomplete="off"></el-input>
                                 </el-form-item>
@@ -255,7 +322,7 @@
                             <div slot="footer" class="dialog-footer">
                                 <el-button @click="dialogNewDVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="submitNew('D', newD)"
-                                           :disabled="!(newD.yxh != '' && newD.mc != '' && newD.dz != '' && newD.lxdh != '')">确 定</el-button>
+                                           :disabled="!(newD.yxh != '' && newD.mc != '' && newD.dz != '' && newD.lxdh != '') || loading">确 定</el-button>
                             </div>
                         </el-dialog>
                     </el-col>
@@ -294,7 +361,7 @@
                             <el-button
                                     :disabled="!usertype"
                                     size="mini"
-                                    @click="handleUpdate('D', scope.row)">编辑</el-button>
+                                    @click="dialogModDVisible = true; newD = scope.row;">编辑</el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
@@ -314,6 +381,27 @@
                             :total="(allDept.filter(searchD)).length">
                     </el-pagination>
                 </p>
+                <el-dialog title="修改学院信息" :visible.sync="dialogModDVisible" width="40%">
+                    <el-form :model="newD" style="display: inline-block; margin: 0 auto;">
+                        <el-form-item label="院系号" :label-width="formLabelWidth" required>
+                            <el-input v-model="newD.yxh" autocomplete="off" style="width: 15vw;" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="学院名称" :label-width="formLabelWidth" required>
+                            <el-input v-model="newD.mc" autocomplete="off" style="width: 15vw;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="地址" :label-width="formLabelWidth" required>
+                            <el-input v-model="newD.dz" autocomplete="off" style="width: 15vw;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="联系电话" :label-width="formLabelWidth" required>
+                            <el-input v-model="newD.lxdh" autocomplete="off" style="width: 15vw;"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogModDVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="updateItem('D', newD)"
+                                   :disabled="!(newD.yxh != '' && newD.mc != '' && newD.dz != '' && newD.lxdh != '') || loading">确 定</el-button>
+                    </div>
+                </el-dialog>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -339,6 +427,7 @@
                 searchtextS: '',
                 firstS: 1,
                 dialogNewSVisible: false,
+                dialogModSVisible: false,
                 newS: {
                     xh: '',
                     xm: '',
@@ -356,6 +445,7 @@
                 searchtextT: '',
                 firstT: 1,
                 dialogNewTVisible: false,
+                dialogModTVisible: false,
                 newT: {
                     gh: '',
                     xm: '',
@@ -372,6 +462,7 @@
                 searchtextD: '',
                 firstD: 1,
                 dialogNewDVisible: false,
+                dialogModDVisible: false,
                 newD: {
                     yxh: '',
                     mc: '',
@@ -385,7 +476,7 @@
         methods: {
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/alldept';
+                const path = 'http://localhost:5000/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -403,7 +494,7 @@
             },
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/student';
+                const path = 'http://localhost:5000/student';
                 axios.get(path)
                     .then((res) => {
                         that.studentData = res.data;
@@ -421,7 +512,7 @@
             },
             getTEACHERMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/teacher';
+                const path = 'http://localhost:5000/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.teacherData = res.data;
@@ -535,6 +626,9 @@
             },
             addUser(type) {
                 let that = this;
+                that.newS = { xh: '', xm: '', xb: '', csrq: '', jg: '', sjhm: '', yxh: '' };
+                that.newT = { gh: '', xm: '', xb: '', csrq: '', zc: '', yxh: '' };
+                that.newD = { yxh: '', mc: '', dz: '', lxdh: '' };
                 if (type == 'T')
                     this.dialogNewTVisible = true;
                 else if (type == 'S')
@@ -554,7 +648,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/addNew/' + type,
+                        url: 'http://localhost:5000/addNew/' + type,
                         data: item,
                     }).then((response) => {
                         console.log(response)
@@ -601,12 +695,52 @@
             },
             updateItem(type, item) {
                 let that = this;
-                if (type == 'T') {
+                if (type == 'T' || type == 'S' || type == 'D') {
                     console.log(item);
-                } else if (type == 'S') {
-                    console.log(item);
-                } else if (type == 'D') {
-                    console.log(item);
+                    that.loading = true;
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:5000/modItem/' + type,
+                        data: item,
+                    }).then((response) => {
+                        console.log(response)
+                        if (response.data == 'success') {
+                            that.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            that.loading = false;
+                            that.dialogModTVisible = false;
+                            that.dialogModSVisible = false;
+                            that.dialogModDVisible = false;
+                            that.getALLDEPTMessage();
+                            that.getSTUDENTMessage();
+                            that.getTEACHERMessage();
+                        } else if (response.data == 'repeat') {
+                            that.$message({
+                                message: '该内容不存在',
+                                type: 'error'
+                            });
+                            that.loading = false;
+                            that.dialogModTVisible = false;
+                            that.dialogModSVisible = false;
+                            that.dialogModDVisible = false;
+                            that.getALLDEPTMessage();
+                            that.getSTUDENTMessage();
+                            that.getTEACHERMessage();
+                        } else {
+                            that.loading = false;
+                            that.dialogModTVisible = false;
+                            that.dialogModSVisible = false;
+                            that.dialogModDVisible = false;
+                            that.$message({
+                                message: '未知错误',
+                                type: 'error'
+                            });
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    })
                 } else {
                     that.$message({
                         message: '未知错误',
@@ -636,7 +770,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/delItem/' + type,
+                        url: 'http://localhost:5000/delItem/' + type,
                         data: row,
                     }).then((response) => {
                         console.log(response)

@@ -220,7 +220,7 @@
         methods: {
             getAVATERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/avaterm/5';
+                const path = 'http://localhost:5000/avaterm/5';
                 axios.get(path)
                     .then((res) => {
                         that.avaTerm = res.data;
@@ -235,7 +235,7 @@
             },
             getALLTERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/allterm';
+                const path = 'http://localhost:5000/allterm';
                 axios.get(path)
                     .then((res) => {
                         that.allTerm = res.data;
@@ -250,7 +250,7 @@
             },
             getALLTEACHERMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/teacher';
+                const path = 'http://localhost:5000/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.allTeacher = res.data;
@@ -265,7 +265,7 @@
             },
             getALLCOURSEMMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/courseall';
+                const path = 'http://localhost:5000/courseall';
                 axios.get(path)
                     .then((res) => {
                         that.allCourse = res.data;
@@ -280,7 +280,7 @@
             },
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/alldept';
+                const path = 'http://localhost:5000/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -295,7 +295,7 @@
             },
             getCOURSEOPENMessage() {
                 let that = this;
-                const path = 'https://api.yijunstudio.xyz/school/courseopen';
+                const path = 'http://localhost:5000/courseopen';
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -367,7 +367,7 @@
                 that.fullscreenLoading = true;
                 axios({
                     method: 'post',
-                    url: 'https://api.yijunstudio.xyz/school/courseopenDel',
+                    url: 'http://localhost:5000/courseopenDel',
                     data: Del,
                 }).then((response) => {
                     console.log(response)
@@ -387,7 +387,7 @@
                         }).then(() => {
                             axios({
                                 method: 'post',
-                                url: 'https://api.yijunstudio.xyz/school/courseopenDel/force',
+                                url: 'http://localhost:5000/courseopenDel/force',
                                 data: Del,
                             }).then((response) => {
                                 if (response.data == 'success') {
@@ -446,7 +446,7 @@
                     that.fullscreenLoading = true;
                     axios({
                         method: 'post',
-                        url: 'https://api.yijunstudio.xyz/school/courseopenNew',
+                        url: 'http://localhost:5000/courseopenNew',
                         data: New,
                     }).then((response) => {
                         console.log(response)

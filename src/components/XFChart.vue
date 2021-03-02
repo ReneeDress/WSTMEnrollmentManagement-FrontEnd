@@ -1,5 +1,5 @@
 <template>
-    <div id="gpachart" style="width: 100%; height: 200px; color: #707070;">
+    <div id="xfchart" style="width: 100%; height: 200px; color: #707070;">
     </div>
 </template>
 
@@ -8,7 +8,7 @@
     // import echarts from "echarts";
 
     export default {
-        name: "GPAChart",
+        name: "XFChart",
         props: {
             userid: String,
         },
@@ -93,29 +93,31 @@
             },
             myEcharts(gpaD){
                 // 基于准备好的dom，初始化echarts实例
-                var myChart = this.echarts.init(document.getElementById('gpachart'));
+                var myChart = this.echarts.init(document.getElementById('xfchart'));
                 // var gpaD = data;
                 var xqs = [];
+                var xfs = []
                 var cjs = [];
                 var jds = [];
-                console.log(gpaD)
+                // console.log(gpaD)
                 gpaD.forEach(gpa => {
-                    console.log(gpa);
+                    // console.log(gpa);
                     xqs.push(gpa.xq);
+                    xfs.push(gpa.zxf == null? 0 : gpa.zxf);
                     cjs.push(gpa.pjcj == null? 0 : gpa.pjcj);
                     jds.push(gpa.pjjd == null? 0 : gpa.pjjd);
                 })
                 // 指定图表的配置项和数据
                 var option = {
                     title: {
-                        text: '平均绩点变化趋势',
+                        text: '获得学分变化趋势',
                         textStyle: {
                             color: '#707070'
                         }
                     },
                     tooltip: {},
                     legend: {
-                        data: ['平均绩点']
+                        data: ['获得学分']
                     },
                     xAxis: {
                         data: xqs,
@@ -137,9 +139,9 @@
                     },
                     series: [
                         {
-                            name: '平均绩点',
+                            name: '获得学分',
                             type: 'line',
-                            data: jds,
+                            data: xfs,
                             color: '#409EFF'
                         }]
                 };
