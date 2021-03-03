@@ -103,7 +103,7 @@
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    :disabled="!usertype"
+                                    :disabled="!usertype || userid != '10000000'"
                                     @click="handleDelete('S', scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -246,7 +246,7 @@
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    :disabled="!usertype"
+                                    :disabled="!usertype || userid != '10000000' || scope.row.gh == '10000000'"
                                     @click="handleDelete('T', scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -303,7 +303,7 @@
                                   style="margin-top:10px; margin-bottom: 10px;"></el-input>
                     </el-col>
                     <el-col :span="3">
-                        <el-button type="primary" @click="addUser('D')">新增学院</el-button>
+                        <el-button type="primary" @click="addUser('D')" :disabled="!usertype || userid != '10000000'">新增学院</el-button>
                         <el-dialog title="新增学院信息" :visible.sync="dialogNewDVisible" width="30%">
                             <el-form :model="newD" style="display: inline-block; margin: 0 auto;">
                                 <el-form-item label="院系号" :label-width="formLabelWidth" required>
@@ -359,13 +359,13 @@
                             width="150">
                         <template slot-scope="scope">
                             <el-button
-                                    :disabled="!usertype"
+                                    :disabled="!usertype || userid != '10000000'"
                                     size="mini"
                                     @click="dialogModDVisible = true; newD = scope.row;">编辑</el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    :disabled="!usertype"
+                                    :disabled="!usertype || userid != '10000000'"
                                     @click="handleDelete('D', scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -476,7 +476,7 @@
         methods: {
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/alldept';
+                const path = 'https://api.yijunstudio.xyz/school/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -494,7 +494,7 @@
             },
             getSTUDENTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/student';
+                const path = 'https://api.yijunstudio.xyz/school/student';
                 axios.get(path)
                     .then((res) => {
                         that.studentData = res.data;
@@ -512,7 +512,7 @@
             },
             getTEACHERMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/teacher';
+                const path = 'https://api.yijunstudio.xyz/school/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.teacherData = res.data;
@@ -648,7 +648,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/addNew/' + type,
+                        url: 'https://api.yijunstudio.xyz/school/addNew/' + type,
                         data: item,
                     }).then((response) => {
                         console.log(response)
@@ -700,7 +700,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/modItem/' + type,
+                        url: 'https://api.yijunstudio.xyz/school/modItem/' + type,
                         data: item,
                     }).then((response) => {
                         console.log(response)
@@ -770,7 +770,7 @@
                     that.loading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/delItem/' + type,
+                        url: 'https://api.yijunstudio.xyz/school/delItem/' + type,
                         data: row,
                     }).then((response) => {
                         console.log(response)

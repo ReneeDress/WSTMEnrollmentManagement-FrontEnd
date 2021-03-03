@@ -147,7 +147,7 @@
         methods: {
             getMYMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/student/' + that.userid;
+                const path = 'https://api.yijunstudio.xyz/school/student/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.myinfo = res.data[0];
@@ -162,7 +162,7 @@
             },
             getGRADEALLMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/gradeAll/' + that.userid;
+                const path = 'https://api.yijunstudio.xyz/school/gradeAll/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -183,7 +183,7 @@
             },
             getGRADEALLGPAMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/gradeAll/GPA/' + that.userid;
+                const path = 'https://api.yijunstudio.xyz/school/gradeAll/GPA/' + that.userid;
                 axios.get(path)
                     .then((res) => {
                         that.gpaData = res.data;

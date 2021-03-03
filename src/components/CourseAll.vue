@@ -198,7 +198,7 @@
             },
             getAVATERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/avaterm/5';
+                const path = 'https://api.yijunstudio.xyz/school/avaterm/5';
                 axios.get(path)
                     .then((res) => {
                         that.avaTerm = res.data;
@@ -213,7 +213,7 @@
             },
             getALLTERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/allterm';
+                const path = 'https://api.yijunstudio.xyz/school/allterm';
                 axios.get(path)
                     .then((res) => {
                         that.allTerm = res.data;
@@ -228,7 +228,7 @@
             },
             getALLTEACHERMMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/teacher';
+                const path = 'https://api.yijunstudio.xyz/school/teacher';
                 axios.get(path)
                     .then((res) => {
                         that.allTeacher = res.data;
@@ -243,7 +243,7 @@
             },
             getALLDEPTMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/alldept';
+                const path = 'https://api.yijunstudio.xyz/school/alldept';
                 axios.get(path)
                     .then((res) => {
                         that.allDept = res.data;
@@ -258,7 +258,7 @@
             },
             getCOURSEALLMessage() {
                 let that = this;
-                const path = 'http://localhost:5000/courseall';
+                const path = 'https://api.yijunstudio.xyz/school/courseall';
                 axios.get(path)
                     .then((res) => {
                         that.courseData = res.data;
@@ -332,7 +332,7 @@
                     that.fullscreenLoading = true;
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/courseall/new',
+                        url: 'https://api.yijunstudio.xyz/school/courseall/new',
                         data: New,
                     }).then((response) => {
                         console.log(response)
@@ -364,10 +364,10 @@
             handleDeleteC(row) {
                 let that = this;
                 that.fullscreenLoading = true;
-                if (row.kkcs != 0)
+                if (row.kkcs == 0)
                     axios({
                         method: 'post',
-                        url: 'http://localhost:5000/courseall/del',
+                        url: 'https://api.yijunstudio.xyz/school/courseall/del',
                         data: row,
                     }).then((response) => {
                         console.log(response)
