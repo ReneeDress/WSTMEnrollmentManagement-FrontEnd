@@ -551,7 +551,7 @@
                         console.log(response)
                         if (response.data == 'success') {
                             that.$message({
-                                message: '新增成功 ' + newsel.kh,
+                                message: '选课成功 ' + newsel.kh,
                                 type: 'success'
                             });
                             that.getCOURSEDETAILMessage();

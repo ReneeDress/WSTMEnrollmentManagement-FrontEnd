@@ -209,7 +209,7 @@
                 this.currentPageC = currentPage
             },
             hasGrade(item) {
-                return item.zpcj != null;
+                return item.zpcj != null || item.zpcj !='';
             },
             blankBottom(param) {
                 const { columns, data } = param;

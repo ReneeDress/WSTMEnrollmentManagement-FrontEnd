@@ -786,7 +786,7 @@
                         } else {
                             that.loading = false;
                             that.$message({
-                                message: '未知错误',
+                                message: '删除失败 请先删除所有关联信息',
                                 type: 'error'
                             });
                         }

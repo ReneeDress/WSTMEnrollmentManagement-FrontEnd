@@ -343,7 +343,7 @@
                     return rowdata;
             },
             xyC(rowdata) {
-                if (this.dept.includes(rowdata.yxh))
+                if (this.dept.includes((rowdata.yxh).toString()))
                     return rowdata;
                 if (this.dept.length == 0)
                     return rowdata;
