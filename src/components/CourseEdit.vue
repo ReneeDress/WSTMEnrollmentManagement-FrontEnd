@@ -1,24 +1,6 @@
 <template>
     <div id="courseedit" style="width: 100%;">
         <el-card shadow="always" style="width: 97%;">
-<!--            <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">课程信息</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.kh }} {{ courseInfo.km }}</el-col>-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">学分学时</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.xf }}学分 {{ courseInfo.xs }}学时</el-col>-->
-<!--            </el-row>-->
-<!--            <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">教师信息</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.gh }} {{ courseInfo.xm }}</el-col>-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">上课时间</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.sksj }}</el-col>-->
-<!--            </el-row>-->
-<!--            <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left;">-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">开课学院</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.mc }}</el-col>-->
-<!--                <el-col :span="2" style="text-indent: 10px; font-weight: 500;">开课学期</el-col>-->
-<!--                <el-col :span="4">{{ courseInfo.xq.slice(0,4) }}学年{{ courseInfo.xq.slice(-2,) == '01'? '秋季' : courseInfo.xq.slice(-2,) == '02'? '冬季' : courseInfo.xq.slice(-2,) == '03'? '春季' : '夏季' }}学期</el-col>-->
-<!--            </el-row>-->
             <el-row type="flex" align="middle" style="margin-bottom: 1vh; font-size: 14px; color: #707070; text-align: left; height: 3.1vh;">
                 <el-col :span="2" style="text-indent: 10px; font-weight: 500;">
                     只看我的
@@ -266,7 +248,7 @@
                     return rowdata;
             },
             xyC(rowdata) {
-                if (this.dept.includes(rowdata.yxh))
+                if (this.dept.includes((rowdata.yxh).toString()))
                     return rowdata;
                 if (this.dept.length == 0)
                     return rowdata;
